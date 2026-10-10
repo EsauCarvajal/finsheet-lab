@@ -18,6 +18,7 @@ for (const [name, type] of Object.entries({ chromium, firefox, webkit })) {
   const browser = await type.launch();
   try {
     const page = await browser.newPage();
+    page.setDefaultTimeout(20000);
     const errors = [];
     const external = [];
     page.on('pageerror', (e) => errors.push(e.message));
@@ -36,19 +37,27 @@ for (const [name, type] of Object.entries({ chromium, firefox, webkit })) {
       .locator('#ui-language')
       .getByRole('button', { name: 'Español', exact: true })
       .click();
-    await page.goto(`${origin}/#learn/foundation-01`);
+    await page.getByRole('heading', { name: 'Domina Excel. Piensa en finanzas.' }).waitFor();
+    await page.getByRole('link', { name: 'Empezar a practicar', exact: true }).click();
     await page.getByRole('textbox', { name: 'Fórmula', exact: true }).fill('=SUMA(B2:B5)');
     await page.getByRole('button', { name: 'Comprobar solución', exact: true }).click();
     await page.getByRole('heading', { name: '¡Reto completado!' }).waitFor();
     await page.reload();
     await page.getByText('Completado', { exact: true }).waitFor();
+    const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    mobile.setDefaultTimeout(20000);
+    mobile.on('pageerror', (e) => errors.push(e.message));
+    mobile.on('request', (r) => {
+      if (new URL(r.url()).origin !== origin) external.push(r.url());
+    });
+    await mobile.goto(origin);
+    await mobile.getByRole('heading', { name: 'Domina Excel. Piensa en finanzas.' }).waitFor();
+    await mobile.getByRole('button', { name: 'Menu', exact: true }).click();
+    await mobile.getByRole('navigation').waitFor({ state: 'visible' });
+    await mobile.keyboard.press('Escape');
+    await mobile.getByRole('navigation').waitFor({ state: 'hidden' });
     assert.deepEqual(errors, []);
     assert.deepEqual(external, []);
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.getByRole('button', { name: 'Menu', exact: true }).click();
-    await page.getByRole('navigation').waitFor({ state: 'visible' });
-    await page.keyboard.press('Escape');
-    await page.getByRole('navigation').waitFor({ state: 'hidden' });
     console.log(
       `${name}: navigation, languages, mobile menu, calculation and saved progress passed`,
     );
