@@ -8,15 +8,15 @@ test('home, catalog filters, cases, language and responsive layout', async ({ pa
   await expect(
     page.getByRole('heading', { name: 'Domina Excel. Piensa en finanzas.' }),
   ).toBeVisible();
-  await page.getByRole('link', { name: 'Ver todos los retos' }).click();
+  await page.getByRole('link', { name: 'Ver los retos' }).click();
   await expect(page.getByRole('link', { name: /Resolver reto/ })).toHaveCount(27);
   await page.getByRole('combobox', { name: 'Tema', exact: true }).selectOption('finance');
   await expect(page.getByRole('link', { name: /Resolver reto/ })).toHaveCount(4);
   await page.getByRole('combobox', { name: 'Dificultad', exact: true }).selectOption('easy');
   await expect(page.getByRole('link', { name: /Resolver reto/ })).toHaveCount(2);
-  await page.locator('#ui-language').selectOption('en');
-  await expect(page.getByRole('heading', { name: 'Every challenge, a new skill.' })).toBeVisible();
-  await page.getByRole('link', { name: 'Financial cases', exact: true }).click();
+  await page.locator('#ui-language').getByRole('button', { name: 'English', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Excel challenges' })).toBeVisible();
+  await page.getByRole('link', { name: 'Cases', exact: true }).click();
   await expect(page.getByRole('link', { name: /Solve challenge/ })).toHaveCount(3);
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await mobile.goto('http://127.0.0.1:4173');
@@ -28,9 +28,7 @@ test('home, catalog filters, cases, language and responsive layout', async ({ pa
   );
   await mobile.getByRole('button', { name: 'Menu', exact: true }).click();
   await mobile.getByRole('link', { name: 'Mi progreso', exact: true }).click();
-  await expect(
-    mobile.getByRole('heading', { name: 'Mira todo lo que has avanzado.' }),
-  ).toBeVisible();
+  await expect(mobile.getByRole('heading', { name: 'Tu progreso' })).toBeVisible();
   await mobile.close();
   expect(errors).toEqual([]);
 });
@@ -100,12 +98,17 @@ test('native formula translation preserves literal text and interface independen
   const input = page.getByRole('textbox', { name: 'Fórmula', exact: true });
   await input.fill('=SI(C2>B2;"SUM IF";"OK")');
   await input.press('Enter');
-  await page.locator('#formula-language').selectOption('en');
+  await page
+    .locator('#formula-language')
+    .getByRole('button', { name: 'English', exact: true })
+    .click();
   await expect(input).toHaveValue('=IF(C2>B2,"SUM IF","OK")');
   await expect(page.getByRole('heading', { name: 'Semáforo de presupuesto' })).toBeVisible();
-  await page.locator('#ui-language').selectOption('en');
+  await page.locator('#ui-language').getByRole('button', { name: 'English', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Budget traffic light' })).toBeVisible();
-  await expect(page.locator('#formula-language')).toHaveValue('en');
+  await expect(
+    page.locator('#formula-language').getByRole('button', { name: 'English', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('worksheet supports keyboard cell editing on mobile', async ({ browser }) => {
@@ -138,7 +141,7 @@ test('all 27 activities can be completed through the interface', async ({ page }
   await expect(
     page.getByRole('heading', { name: 'Domina Excel. Piensa en finanzas.' }),
   ).toBeVisible();
-  await page.locator('#ui-language').selectOption('en');
+  await page.locator('#ui-language').getByRole('button', { name: 'English', exact: true }).click();
   await expect(
     page.getByRole('heading', { name: 'Master Excel. Think in finance.' }),
   ).toBeVisible();
@@ -148,7 +151,10 @@ test('all 27 activities can be completed through the interface', async ({ page }
     }, c.id);
     const check = page.getByRole('button', { name: 'Check solution', exact: true });
     await expect(check).toBeEnabled();
-    await page.locator('#formula-language').selectOption('en');
+    await page
+      .locator('#formula-language')
+      .getByRole('button', { name: 'English', exact: true })
+      .click();
     for (const target of c.targets) {
       await page.locator('#selected-cell').selectOption(target.cell);
       await page.getByRole('textbox', { name: 'Formula', exact: true }).fill(target.formula);
@@ -183,8 +189,10 @@ test('unsubmitted drafts and language survive closing the browser context', asyn
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4173/#learn/foundation-01');
-  await expect(page.locator('#ui-language')).toBeEnabled();
-  await page.locator('#ui-language').selectOption('en');
+  await expect(
+    page.locator('#ui-language').getByRole('button', { name: 'English', exact: true }),
+  ).toBeEnabled();
+  await page.locator('#ui-language').getByRole('button', { name: 'English', exact: true }).click();
   await page.getByRole('textbox', { name: 'Formula', exact: true }).fill('=SUMA(B2:B5)');
   await expect
     .poll(() =>

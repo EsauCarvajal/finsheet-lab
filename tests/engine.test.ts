@@ -35,6 +35,23 @@ describe('catalog and genuine spreadsheet calculation', () => {
       expect(evaluateChallenge(c, es, 'es', c.interpretation?.answer).passed).toBe(true);
       expect(translateDraft(c, es, 'es', 'en')).toEqual(draft);
     });
+  for (const c of challenges)
+    it(`${c.id}: manual results and incorrect formulas cannot complete the activity`, () => {
+      const reference = Object.fromEntries(
+        c.targets.map((target) => [target.cell, target.formula]),
+      );
+      const values = calculateView(c, reference, 'en').values;
+      const manual = Object.fromEntries(
+        c.targets.map((target) => [target.cell, values[target.cell] ?? '0']),
+      );
+      expect(
+        evaluateChallenge(c, manual, 'en', c.interpretation?.answer).checks.every(
+          (check) => check.reason === 'formula',
+        ),
+      ).toBe(true);
+      const incorrect = { ...reference, [c.targets[0].cell]: '=999999999' };
+      expect(evaluateChallenge(c, incorrect, 'en', c.interpretation?.answer).passed).toBe(false);
+    });
   it('accepts a different correct formula, rejects constants and fake formulas', () => {
     const c = challenges[0];
     expect(evaluateChallenge(c, { B7: '=B2+B3+B4+B5' }, 'en').passed).toBe(true);

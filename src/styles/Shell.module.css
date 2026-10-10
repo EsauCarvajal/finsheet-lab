@@ -1,0 +1,550 @@
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fbfcfa;
+}
+.header {
+  border-bottom: 1px solid #e4eae3;
+  background: #fbfcfa;
+}
+.headerInner {
+  max-width: 1360px;
+  margin: auto;
+  padding: 0 44px;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 23px;
+  font-weight: 730;
+  letter-spacing: -0.9px;
+  white-space: nowrap;
+}
+.brand > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 39px;
+  color: #fff;
+  background: #176e51;
+  border-radius: 8px;
+}
+.brand em {
+  font-style: normal;
+  font-weight: 400;
+  color: #607669;
+  margin-left: 4px;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-left: auto;
+}
+.nav a {
+  font-size: 14px;
+  padding: 14px 0;
+  color: #52685b;
+  position: relative;
+}
+.nav a:hover,
+.nav a[aria-current] {
+  color: #176e51;
+}
+.nav a[aria-current] {
+  font-weight: 650;
+}
+.nav a[aria-current]::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  height: 2px;
+  left: 0;
+  right: 0;
+  background: #176e51;
+}
+.menuButton {
+  display: none;
+  background: none;
+  min-width: 40px;
+  min-height: 44px;
+  border-radius: 7px;
+}
+.skip {
+  position: fixed;
+  left: 18px;
+  top: -80px;
+  padding: 12px 18px;
+  z-index: 100;
+  color: #fff;
+  background: #176e51;
+  border-radius: 7px;
+}
+.skip:focus {
+  top: 12px;
+}
+.main {
+  max-width: 1272px;
+  width: 100%;
+  padding: 42px 44px 68px;
+  margin: 0 auto;
+  flex: 1;
+}
+.landing {
+  max-width: 1360px;
+  padding-top: 44px;
+  padding-bottom: 36px;
+}
+.practice {
+  max-width: 1460px;
+  padding-top: 30px;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: #566b5d;
+  font-size: 12px;
+  max-width: 1272px;
+  width: calc(100% - 88px);
+  margin: 0 auto;
+  padding: 22px 0;
+  border-top: 1px solid #e1e8df;
+}
+.footer > span:first-child {
+  margin-right: auto;
+}
+.footer a:hover {
+  color: #176e51;
+  text-decoration: underline;
+}
+.footerNote {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.landingHero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 28px;
+  background: #edf4ee;
+  border: 1px solid #e1eae0;
+  border-radius: 18px;
+  padding: 64px 48px;
+  min-height: 505px;
+}
+.landingHero h1 {
+  margin: 26px 0 26px;
+  font-size: clamp(38px, 4.1vw, 58px);
+  line-height: 1.16;
+  letter-spacing: -2.2px;
+  font-weight: 720;
+}
+.landingHero h1 > span {
+  display: block;
+}
+.landingHero h1 > span:last-child {
+  color: #137c59;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #426c56;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 1.4px;
+}
+.eyebrow::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #328060;
+}
+.heroCopy {
+  position: relative;
+  z-index: 2;
+}
+.heroCopy > p {
+  color: #506e5d;
+  font-size: 17px;
+  line-height: 1.75;
+  max-width: 430px;
+  margin-bottom: 34px;
+  text-wrap: pretty;
+}
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+.heroActions > a:first-child {
+  padding: 17px 21px;
+  font-size: 14px;
+  min-height: 54px;
+  border-radius: 9px;
+}
+.heroActions > a:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: #426650;
+  min-height: 44px;
+}
+.heroActions > a:last-child:hover {
+  color: #137c59;
+  text-decoration: underline;
+}
+.heroNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 30px;
+  color: #56715e;
+  font-size: 12px;
+}
+.art {
+  position: relative;
+  width: 100%;
+  min-height: 335px;
+  display: grid;
+  place-items: center;
+}
+.art > div {
+  width: 100%;
+  min-height: 335px;
+}
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin: 24px 0 0;
+  padding: 0 5px;
+  font-size: 13px;
+  color: #596e5e;
+}
+.summary > span {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.summary strong {
+  font-size: 18px;
+  color: #274f3b;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.syllabus {
+  margin-left: auto;
+  position: relative;
+}
+.syllabus summary {
+  cursor: pointer;
+  padding: 12px 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #38684c;
+  list-style: none;
+}
+.syllabus summary::-webkit-details-marker {
+  display: none;
+}
+.syllabus summary:focus-visible {
+  outline: 2px solid #176e51;
+  outline-offset: 4px;
+}
+.syllabus[open] summary > svg {
+  transform: rotate(180deg);
+}
+.syllabus ol {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  z-index: 6;
+  min-width: 295px;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #dae5da;
+  border-radius: 10px;
+  box-shadow: 0 12px 35px #274f3b12;
+}
+.syllabus a {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 5px;
+  color: #354f3d;
+}
+.syllabus a:hover {
+  background: #f0f5ed;
+}
+.syllabus a span:first-child {
+  font-family: Consolas, monospace;
+  color: #667c68;
+  font-size: 11px;
+}
+
+/* A single page header and short cards keep the catalog easy to scan. */
+.contentHeader {
+  margin-bottom: 30px;
+}
+.contentHeader h1 {
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+.contentHeader p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #60715f;
+  margin-bottom: 0;
+}
+.catalogCard {
+  padding: 24px;
+}
+.catalogCard h2 {
+  margin: 15px 0 18px;
+  min-height: 0;
+  font-size: 18px;
+}
+.catalogCard > p {
+  min-height: 0;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: #5d7059;
+}
+.catalogCard > div:last-child {
+  margin: 0;
+  border: 0;
+  padding-top: 0;
+}
+@media (min-width: 1050px) {
+  .art .largeSheet {
+    width: 380px;
+  }
+}
+@media (max-width: 1100px) {
+  .headerInner {
+    gap: 24px;
+    padding: 0 32px;
+  }
+  .nav {
+    gap: 22px;
+  }
+  .main {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .landingHero {
+    padding: 48px 32px;
+    gap: 20px;
+    min-height: 460px;
+  }
+  .landingHero h1 {
+    font-size: 44px;
+  }
+  .heroCopy > p {
+    font-size: 16px;
+  }
+  .heroActions {
+    gap: 16px;
+  }
+  .heroActions > a:last-child {
+    font-size: 13px;
+  }
+  .footer {
+    width: calc(100% - 64px);
+  }
+}
+@media (max-width: 780px) {
+  .headerInner {
+    padding: 16px 22px;
+    min-height: 78px;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    margin-right: auto;
+    font-size: 21px;
+    gap: 8px;
+  }
+  .brand > span:first-child {
+    width: 31px;
+    height: 35px;
+  }
+  .menuButton {
+    display: inline-grid;
+    place-items: center;
+  }
+  .nav {
+    display: none;
+    order: 4;
+    flex-basis: 100%;
+    margin: 0;
+    padding-top: 10px;
+    gap: 0;
+    border-top: 1px solid #e1e8df;
+  }
+  .navOpen {
+    display: flex;
+  }
+  .nav a {
+    flex: 1;
+    text-align: center;
+    padding: 13px 4px;
+  }
+  .main {
+    padding: 28px 22px 44px;
+  }
+  .landingHero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 44px 34px 25px;
+  }
+  .heroCopy > p {
+    max-width: 450px;
+  }
+  .landingHero h1 {
+    font-size: 48px;
+  }
+  .art,
+  .art > div {
+    min-height: 300px;
+  }
+  .art {
+    width: min(100%, 450px);
+    margin: 0 auto;
+  }
+  .art > div {
+    display: flex;
+  }
+  .summary {
+    gap: 22px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .syllabus {
+    margin-left: auto;
+  }
+  .footer {
+    width: calc(100% - 44px);
+  }
+  .catalogCard {
+    padding: 22px;
+  }
+}
+@media (max-width: 480px) {
+  .headerInner {
+    padding: 13px 16px;
+    gap: 10px;
+    min-height: 74px;
+  }
+  .brand {
+    font-size: 20px;
+    gap: 7px;
+  }
+  .brand > span:first-child {
+    width: 28px;
+    height: 32px;
+    border-radius: 6px;
+  }
+  .menuButton {
+    min-width: 34px;
+  }
+  .main {
+    padding: 24px 16px 38px;
+  }
+  .landingHero {
+    padding: 34px 22px 15px;
+    border-radius: 13px;
+    gap: 4px;
+  }
+  .landingHero h1 {
+    font-size: clamp(33px, 9vw, 42px);
+    letter-spacing: -1.4px;
+    margin: 22px 0;
+  }
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .heroCopy > p {
+    font-size: 15px;
+    margin-bottom: 26px;
+  }
+  .heroActions {
+    gap: 10px 20px;
+  }
+  .heroActions > a:first-child {
+    min-height: 49px;
+    font-size: 13px;
+    padding: 13px 17px;
+  }
+  .heroActions > a:last-child {
+    font-size: 12px;
+  }
+  .heroNote {
+    font-size: 11px;
+    margin-top: 20px;
+  }
+  .art {
+    min-height: 260px;
+  }
+  .art > div {
+    min-height: 260px;
+    display: flex;
+  }
+  .summary {
+    gap: 12px 20px;
+    margin-top: 18px;
+  }
+  .summary strong {
+    font-size: 16px;
+  }
+  .syllabus {
+    width: 100%;
+    margin: 0;
+  }
+  .syllabus summary {
+    justify-content: space-between;
+    border-top: 1px solid #e1e8df;
+    padding-top: 18px;
+  }
+  .syllabus ol {
+    position: static;
+    min-width: 0;
+    box-shadow: none;
+  }
+  .footer {
+    width: calc(100% - 32px);
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 20px 0;
+    font-size: 11px;
+  }
+  .footerNote {
+    font-size: 10px;
+  }
+  .catalogCard {
+    padding: 20px;
+  }
+}

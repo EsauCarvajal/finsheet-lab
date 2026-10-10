@@ -1,4 +1,12 @@
-import { Suspense, lazy, useEffect, useRef, useState, type ComponentProps } from 'react';
+import {
+  Suspense,
+  lazy,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ArrowDownToLine,
@@ -12,6 +20,7 @@ import {
   Check,
   CheckCircle2,
   ChevronRight,
+  ChevronDown,
   CircleHelp,
   Database,
   Download,
@@ -49,6 +58,8 @@ import {
 } from './types';
 import type WorkspaceComponent from './components/Workspace';
 import s from './styles/App.module.css';
+import layout from './styles/Shell.module.css';
+import LanguageSwitch from './components/LanguageSwitch';
 
 const repository = new BrowserProgressRepository();
 const LazyWorkspace = lazy(() => import('./components/Workspace'));
@@ -150,11 +161,21 @@ export default function App() {
         ? 'FinSheet Lab · Excel para el mundo financiero'
         : 'FinSheet Lab · Excel for the financial world';
   }, [lang]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     setMenu(false);
     window.scrollTo(0, 0);
-    requestAnimationFrame(() => document.querySelector<HTMLElement>('main h1')?.focus());
+    document.querySelector<HTMLElement>('main h1')?.focus({ preventScroll: true });
   }, [route]);
+  useEffect(() => {
+    if (!menu) return;
+    const closeMenu = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setMenu(false);
+      document.getElementById('navigation-toggle')?.focus();
+    };
+    document.addEventListener('keydown', closeMenu);
+    return () => document.removeEventListener('keydown', closeMenu);
+  }, [menu]);
   const updateActivity = (id: string, patch: Partial<ActivityProgress>) =>
     setState((previous) => {
       const c = findChallenge(id)!;
@@ -181,354 +202,196 @@ export default function App() {
     void appI18n.changeLanguage(language);
     setState((p) => ({ ...p, settings: { ...p.settings, language } }));
   };
-  const stats = progressStats(state);
-  const current = nextChallenge(state);
-  const navigation = [
-    { id: 'home', icon: LayoutDashboard },
-    { id: 'catalog', icon: BookOpen },
-    { id: 'cases', icon: FileSpreadsheet },
-    { id: 'progress', icon: ChartNoAxesCombined },
-  ];
   const active = page === 'learn' ? 'catalog' : page;
   return (
-    <div className={s.app}>
-      {menu && (
-        <button className={s.overlay} onClick={() => setMenu(false)} aria-label={t('back')} />
-      )}
-      <aside className={`${s.sidebar} ${menu ? s.sidebarOpen : ''}`}>
-        <a href="#home" className={s.brand} aria-label="FinSheet Lab">
-          <span className={s.logo}>
-            <FileSpreadsheet size={24} />
-          </span>
-          <span>
-            FinSheet<span className={s.lab}>Lab</span>
-            <small>{t('tagline')}</small>
-          </span>
-        </a>
-        <div className={s.sidebarLabel}>
-          {lang === 'es' ? 'APRENDE Y PRACTICA' : 'LEARN & PRACTICE'}
-        </div>
-        <nav aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}>
-          {navigation.map(({ id, icon: Icon }) => (
-            <a
-              key={id}
-              href={`#${id}`}
-              className={`${s.navLink} ${active === id ? s.navActive : ''}`}
-              aria-current={active === id ? 'page' : undefined}
-            >
-              <Icon size={19} strokeWidth={1.8} />
-              <span>{t(id)}</span>
-              {id === 'cases' && (
-                <span className={s.navCount} aria-hidden="true">
-                  3
-                </span>
-              )}
-              {active === id && <span className={s.navDot} aria-hidden="true" />}
-            </a>
-          ))}
-        </nav>
-        <div className={s.sideTip}>
-          <span className={s.sideTipIcon}>
-            <Lightbulb size={20} />
-          </span>
-          <strong>{lang === 'es' ? 'Una fórmula a la vez.' : 'One formula at a time.'}</strong>
-          <p>
-            {lang === 'es'
-              ? 'Las grandes habilidades se construyen con pequeños pasos.'
-              : 'Great skills are built through small steps.'}
-          </p>
-          <a href={`#learn/${current.id}`}>
-            {t('continue')} <ArrowRight size={15} />
-          </a>
-        </div>
-        <div className={s.sidebarBottom}>
-          <a href="#about" className={`${s.navLink} ${active === 'about' ? s.navActive : ''}`}>
-            <CircleHelp size={19} />
-            {t('about')}
-          </a>
-          <div className={s.localStatus}>
-            <span className={s.statusDot} />
-            <div>
-              <strong>{t('noAccount')}</strong>
-              <small>{t('localShort')}</small>
-            </div>
-            <ShieldCheck size={17} />
-          </div>
-        </div>
-      </aside>
-      <div className={s.mainShell}>
-        <header className={s.topbar}>
-          <div className={s.topbarLeft}>
-            <button
-              className={`${s.iconButton} ${s.mobileMenu}`}
-              onClick={() => setMenu((v) => !v)}
-              aria-label="Menu"
-              aria-expanded={menu}
-            >
-              {menu ? <X /> : <Menu />}
-            </button>
-            <div>
-              <span className={s.eyebrow}>{t('workspace')}</span>
-              <strong>{t('greeting')}</strong>
-            </div>
-          </div>
-          <div className={s.topbarActions}>
-            <div className={s.languageSwitch}>
-              <Globe2 size={16} />
-              <label className="sr-only" htmlFor="ui-language">
-                {t('language')}
-              </label>
-              <select
-                id="ui-language"
-                disabled={!loaded}
-                value={lang}
-                onChange={(e) => setLanguage(e.target.value as Language)}
-              >
-                <option value="es">ES</option>
-                <option value="en">EN</option>
-              </select>
-            </div>
-            <span className={s.headerDivider} />
-            <span className={s.avatar} title={t('noAccount')}>
-              {lang === 'es' ? 'TÚ' : 'YOU'}
+    <div className={layout.app}>
+      <a
+        href="#main-content"
+        className={layout.skip}
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById('main-content')?.focus();
+        }}
+      >
+        {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
+      </a>
+      <header className={layout.header}>
+        <div className={layout.headerInner}>
+          <a href="#home" className={layout.brand} aria-label="FinSheet Lab">
+            <span>
+              <FileSpreadsheet size={21} />
             </span>
-          </div>
-        </header>
-        <main className={`${s.main} ${page === 'learn' ? s.mainWorkspace : ''}`}>
-          {storageError && (
-            <div className={s.warning} role="status">
-              <Database size={18} />
-              {t('storageError')}
-            </div>
-          )}
-          {!loaded ? (
-            <p role="status">{t('loading')}</p>
-          ) : page === 'home' ? (
-            <Home state={state} lang={lang} />
-          ) : page === 'catalog' || page === 'cases' ? (
-            <Catalog
-              key={route}
-              state={state}
-              lang={lang}
-              casesOnly={page === 'cases'}
-              initialModule={new URLSearchParams(route.split('?')[1]).get('module') ?? ''}
-            />
-          ) : page === 'progress' ? (
-            <Progress state={state} lang={lang} onReplace={setState} />
-          ) : page === 'about' ? (
-            <About />
-          ) : page === 'learn' && findChallenge(route.split('/')[1]) ? (
-            <Workspace
-              key={route}
-              challenge={findChallenge(route.split('/')[1])!}
-              activity={state.activities[route.split('/')[1]]}
-              lang={lang}
-              defaultFormulaLanguage={state.settings.formulaLanguage}
-              onUpdate={(patch) => updateActivity(route.split('/')[1], patch)}
-              onFormulaLanguage={(language) =>
-                setState((p) => ({ ...p, settings: { ...p.settings, formulaLanguage: language } }))
-              }
-              saving={saving}
-              storageError={storageError}
-            />
-          ) : (
-            <div className={s.empty}>
-              <CircleHelp size={36} />
-              <h1 tabIndex={-1}>
-                {lang === 'es' ? 'Este reto no existe.' : 'This challenge does not exist.'}
-              </h1>
-              <a href="#catalog" className={s.primary}>
-                {t('back')}
+            <span>
+              FinSheet<em>Lab</em>
+            </span>
+          </a>
+          <nav
+            id="primary-navigation"
+            className={`${layout.nav} ${menu ? layout.navOpen : ''}`}
+            aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}
+          >
+            {['catalog', 'cases', 'progress'].map((id) => (
+              <a key={id} href={`#${id}`} aria-current={active === id ? 'page' : undefined}>
+                {t(id)}
               </a>
-            </div>
-          )}
-        </main>
-        <footer className={s.footer}>
-          <span>
-            <span className={s.footerBrand}>FinSheet Lab</span> · {t('footer')}
-          </span>
-          <span>
-            <ShieldCheck size={13} />
-            {t('localShort')}
-            <span className={s.footerDot}>·</span>ES / EN
-          </span>
-        </footer>
-      </div>
+            ))}
+          </nav>
+          <LanguageSwitch
+            id="ui-language"
+            label={t('language')}
+            value={lang}
+            onChange={setLanguage}
+            disabled={!loaded}
+          />
+          <button
+            id="navigation-toggle"
+            className={layout.menuButton}
+            aria-label="Menu"
+            aria-expanded={menu}
+            aria-controls="primary-navigation"
+            onClick={() => setMenu((value) => !value)}
+          >
+            {menu ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </header>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={`${layout.main} ${page === 'home' ? layout.landing : ''} ${page === 'learn' ? layout.practice : ''}`}
+      >
+        {storageError && (
+          <div className={s.warning} role="status">
+            <Database size={18} />
+            {t('storageError')}
+          </div>
+        )}
+        {!loaded ? (
+          <p role="status">{t('loading')}</p>
+        ) : page === 'home' ? (
+          <Home state={state} lang={lang} />
+        ) : page === 'catalog' || page === 'cases' ? (
+          <Catalog
+            key={route}
+            state={state}
+            lang={lang}
+            casesOnly={page === 'cases'}
+            initialModule={new URLSearchParams(route.split('?')[1]).get('module') ?? ''}
+          />
+        ) : page === 'progress' ? (
+          <Progress
+            state={state}
+            lang={lang}
+            onReplace={(value) => {
+              setState(value);
+              void appI18n.changeLanguage(value.settings.language);
+            }}
+          />
+        ) : page === 'about' ? (
+          <About />
+        ) : page === 'learn' && findChallenge(route.split('/')[1]) ? (
+          <Workspace
+            key={route}
+            challenge={findChallenge(route.split('/')[1])!}
+            activity={state.activities[route.split('/')[1]]}
+            lang={lang}
+            defaultFormulaLanguage={state.settings.formulaLanguage}
+            onUpdate={(patch) => updateActivity(route.split('/')[1], patch)}
+            onFormulaLanguage={(language) =>
+              setState((p) => ({ ...p, settings: { ...p.settings, formulaLanguage: language } }))
+            }
+            saving={saving}
+            storageError={storageError}
+          />
+        ) : (
+          <div className={s.empty}>
+            <CircleHelp size={36} />
+            <h1 tabIndex={-1}>
+              {lang === 'es' ? 'Este reto no existe.' : 'This challenge does not exist.'}
+            </h1>
+            <a href="#catalog" className={s.primary}>
+              {t('back')}
+            </a>
+          </div>
+        )}
+      </main>
+      <footer className={layout.footer}>
+        <span>FinSheet Lab</span>
+        <a href="#about">{t('about')}</a>
+        <span className={layout.footerNote}>
+          <ShieldCheck size={13} aria-hidden="true" />
+          {t('localShort')}
+        </span>
+      </footer>
     </div>
   );
 }
 
 function Home({ state, lang }: { state: ProgressState; lang: Language }) {
   const { t } = useTranslation();
-  const stats = progressStats(state);
   const next = nextChallenge(state);
-  const module = modules.find((m) => m.id === next.module);
-  const allDone = stats.completed === 27;
+  const started = Object.keys(state.activities).length > 0;
   return (
     <>
-      <section className={s.hero}>
-        <div className={s.heroCopy}>
-          <span className={s.heroEyebrow}>
-            <span /> {t('heroEyebrow')}
-          </span>
+      <section className={layout.landingHero}>
+        <div className={layout.heroCopy}>
+          <span className={layout.eyebrow}>{t('heroEyebrow')}</span>
           <h1 tabIndex={-1}>
             {t('heroTitle')
               .split('\n')
-              .map((line, i) => (
-                <span key={line} className={i ? s.heroAccent : ''}>
-                  {line}
-                </span>
+              .map((line) => (
+                <span key={line}>{line}</span>
               ))}
           </h1>
           <p>{t('heroText')}</p>
-          <div className={s.heroButtons}>
+          <div className={layout.heroActions}>
             <a href={`#learn/${next.id}`} className={s.primary}>
-              {stats.completed ? t('continue') : t('start')} <ArrowRight size={17} />
+              {t(started ? 'continue' : 'start')}
+              <ArrowRight size={18} />
             </a>
-            <a href="#catalog" className={s.heroSecondary}>
+            <a href="#catalog">
               {t('explore')}
               <ChevronRight size={16} />
             </a>
           </div>
-          <div className={s.heroTrust}>
-            <span>
-              <CheckCircle2 size={14} />
-              {t('free')}
-            </span>
-            <span>
-              <Globe2 size={14} />
-              {t('bilingual')}
-            </span>
-          </div>
+          <span className={layout.heroNote}>
+            <CheckCircle2 size={15} />
+            {t('landingNote')}
+          </span>
         </div>
-        <HeroSheet lang={lang} />
+        <div className={layout.art}>
+          <HeroSheet lang={lang} />
+        </div>
       </section>
-      <div className={s.metrics}>
-        {[
-          { number: '24', label: t('challenges'), Icon: Target },
-          { number: '06', label: t('modules'), Icon: BookOpen },
-          { number: '03', label: t('caseCount'), Icon: ChartNoAxesCombined },
-          { number: String(stats.points).padStart(2, '0'), label: t('xp'), Icon: Sparkles },
-        ].map(({ number, label, Icon }) => (
-          <div key={label} className={s.metric}>
-            <span className={s.metricIcon}>
-              <Icon size={22} strokeWidth={1.6} />
-            </span>
-            <div>
-              <strong>{number}</strong>
-              <span>{label}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className={s.dashboardColumns}>
-        <section>
-          <div className={s.sectionHeading}>
-            <div>
-              <h2>{t('modulesTitle')}</h2>
-              <p>{t('modulesText')}</p>
-            </div>
-            <a href="#catalog">
-              {t('seeAll')}
-              <ArrowUpRight size={16} />
-            </a>
-          </div>
-          <div className={s.moduleGrid}>
-            {modules.map((m, index) => {
-              const group = challenges.filter((c) => c.module === m.id);
-              const completed = group.filter((c) => state.activities[c.id]?.completed).length;
-              return (
-                <a key={m.id} href={`#catalog?module=${m.id}`} className={s.moduleCard}>
-                  <div className={s.moduleCardTop}>
-                    <span
-                      className={s.moduleIcon}
-                      style={{ color: m.color, background: `${m.color}12` }}
-                    >
-                      <ModuleIcon icon={m.icon} />
-                    </span>
-                    <span className={s.moduleNumber}>0{index + 1}</span>
-                  </div>
-                  <h3>{m.title[lang]}</h3>
-                  <p>{m.description[lang]}</p>
-                  <div className={s.functionTags}>
-                    {m.functions.slice(0, 3).map((f) => (
-                      <span key={f}>{lang === 'es' ? (functionNames[f] ?? f) : f}</span>
-                    ))}
-                  </div>
-                  <div className={s.moduleCardBottom}>
-                    <span>
-                      {completed ? `${completed}/4 ${t('solved')}` : `4 ${t('exercises')}`}
-                    </span>
-                    <ArrowUpRight size={17} />
-                  </div>
-                  <div className={s.miniProgress}>
-                    <span style={{ width: `${completed * 25}%`, background: m.color }} />
-                  </div>
+      <div className={layout.summary}>
+        <span>
+          <strong>24</strong>
+          {t('challenges')}
+        </span>
+        <span>
+          <strong>6</strong>
+          {t('modules')}
+        </span>
+        <span>
+          <strong>3</strong>
+          {t('caseCount')}
+        </span>
+        <details className={layout.syllabus}>
+          <summary>
+            {t('syllabus')}
+            <ChevronDown size={15} />
+          </summary>
+          <ol>
+            {modules.map((module, index) => (
+              <li key={module.id}>
+                <a href={`#catalog?module=${module.id}`}>
+                  <span>0{index + 1}</span>
+                  <span>{module.title[lang]}</span>
                 </a>
-              );
-            })}
-          </div>
-        </section>
-        <aside className={s.rightRail}>
-          <section className={s.routeCard}>
-            <div className={s.routeHeader}>
-              <span>
-                <GraduationCap size={21} />
-              </span>
-              <h2>{t('routeTitle')}</h2>
-            </div>
-            <p>{t('routeText')}</p>
-            <div className={s.routeNumbers}>
-              <strong>
-                {stats.percent}
-                <small>%</small>
-              </strong>
-              <span>
-                {stats.completed} / 27
-                <br />
-                {t('solved')}
-              </span>
-            </div>
-            <div className={s.progressTrack}>
-              <span style={{ width: `${stats.percent}%` }} />
-            </div>
-            <div className={s.recommended}>
-              <span className={s.tinyLabel}>{t('recommended')}</span>
-              <div className={s.nextIcon}>
-                <ModuleIcon icon={module?.icon ?? 'chart'} size={20} />
-                <span>{module?.title[lang] ?? t('case')}</span>
-              </div>
-              <h3>{allDone ? t('allDone') : next.title[lang]}</h3>
-              <div className={s.challengeMeta}>
-                <DifficultyTag difficulty={next.difficulty} />
-                <span>
-                  {next.minutes} {t('minutes')}
-                </span>
-              </div>
-              <a href={`#learn/${next.id}`} className={s.secondary}>
-                {stats.completed ? t('continue') : t('beginner')}
-                <ArrowRight size={16} />
-              </a>
-            </div>
-          </section>
-          <section className={s.casePromo}>
-            <span className={s.casePromoIcon}>
-              <ChartNoAxesCombined size={23} />
-            </span>
-            <span className={s.tinyLabel}>FP&A LAB</span>
-            <h3>{t('ready')}</h3>
-            <p>{t('casePromo')}</p>
-            <a href="#cases">
-              {t('viewCases')}
-              <ArrowUpRight size={16} />
-            </a>
-            <span className={s.promoPattern} />
-          </section>
-          <div className={s.privacyHint}>
-            <ShieldCheck size={17} />
-            <p>{t('local')}</p>
-          </div>
-        </aside>
+              </li>
+            ))}
+          </ol>
+        </details>
       </div>
     </>
   );
@@ -544,7 +407,7 @@ function HeroSheet({ lang }: { lang: Language }) {
           <Check size={13} />
         </span>
       </div>
-      <div className={s.mockSheet}>
+      <div className={`${s.mockSheet} ${layout.largeSheet}`}>
         <div className={s.mockTitle}>
           <span className={s.mockFile}>
             <FileSpreadsheet size={15} />
@@ -659,14 +522,13 @@ function Catalog({
           ? a?.completed
           : status === 'inProgress'
             ? a && !a.completed
-            : (a?.attempts ?? 0) === 0 && !a?.completed)) &&
+            : !a)) &&
       haystack.includes(search.trim().toLowerCase())
     );
   });
   return (
     <>
-      <div className={s.pageHeading}>
-        <span className={s.pageKicker}>{casesOnly ? 'FP&A LAB' : t('catalog')}</span>
+      <div className={layout.contentHeader}>
         <h1 tabIndex={-1}>{t(casesOnly ? 'casesTitle' : 'catalogTitle')}</h1>
         <p>{t(casesOnly ? 'casesText' : 'catalogText')}</p>
       </div>
@@ -728,7 +590,8 @@ function Catalog({
             <a
               href={`#learn/${c.id}`}
               key={c.id}
-              className={`${s.challengeCard} ${completed ? s.challengeCompleted : ''} ${casesOnly ? s.caseCard : ''}`}
+              aria-label={`${t('openChallenge')}: ${c.title[lang]}`}
+              className={`${s.challengeCard} ${layout.catalogCard} ${completed ? s.challengeCompleted : ''} ${casesOnly ? s.caseCard : ''}`}
             >
               <div className={s.challengeCardTop}>
                 <span
@@ -750,19 +613,15 @@ function Catalog({
                   <span className={s.xpTag}>+{pointsFor(c.difficulty)} XP</span>
                 )}
               </div>
-              {casesOnly && <span className={s.tinyLabel}>CASE STUDY 0{i + 1}</span>}
+
               <span className={s.challengeTopic}>{m?.title[lang] ?? 'FP&A'}</span>
               <h2>{c.title[lang]}</h2>
-              <p>{casesOnly ? c.lesson[lang] : c.task[lang]}</p>
+              {casesOnly && <p>{t(`caseSummary${i}`)}</p>}
               <div className={s.challengeMeta}>
                 <DifficultyTag difficulty={c.difficulty} />
                 <span>
                   {c.minutes} {t('minutes')}
                 </span>
-              </div>
-              <div className={s.challengeCardBottom}>
-                <span>{t('openChallenge')}</span>
-                <ArrowRight size={17} />
               </div>
             </a>
           );
@@ -831,8 +690,7 @@ function Progress({
     .slice(0, 6);
   return (
     <>
-      <div className={s.pageHeading}>
-        <span className={s.pageKicker}>{t('progress')}</span>
+      <div className={layout.contentHeader}>
         <h1 tabIndex={-1}>{t('progressTitle')}</h1>
         <p>{t('progressText')}</p>
       </div>
@@ -982,8 +840,7 @@ function About() {
   const { t } = useTranslation();
   return (
     <>
-      <div className={s.pageHeading}>
-        <span className={s.pageKicker}>FINSHEET LAB</span>
+      <div className={layout.contentHeader}>
         <h1 tabIndex={-1}>{t('aboutTitle')}</h1>
         <p>{t('aboutIntro')}</p>
       </div>

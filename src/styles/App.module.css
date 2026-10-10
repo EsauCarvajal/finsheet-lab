@@ -423,7 +423,7 @@
 }
 .mockFormulaBar code {
   font-size: 8px;
-  color: #6c8072;
+  color: #4d6743;
 }
 .mockSheet table {
   width: 100%;
@@ -460,7 +460,7 @@
 .mockSheet tr:first-child td {
   background: #f5f8f3;
   font-weight: 600;
-  color: #6c806b;
+  color: #4d6743;
 }
 .mockSheet tbody tr:last-child td {
   font-weight: 650;
@@ -490,7 +490,7 @@
   background: #fafcf9;
 }
 .mockSheetTabs > span:first-child {
-  color: #60916a;
+  color: #4d6743;
   font-size: 8px;
   display: flex;
   align-items: center;
@@ -518,7 +518,7 @@
 }
 .floatingFormula > span:first-child {
   font-style: italic;
-  color: #8daa92;
+  color: #4d6743;
   font-family: Georgia, serif;
 }
 .formulaCheck {
@@ -554,7 +554,7 @@
 }
 .growthBadge small {
   font-size: 8px;
-  color: #92a08d;
+  color: #4d6743;
 }
 .growthBadge strong {
   font-size: 21px;
@@ -1039,7 +1039,7 @@
   flex: 1;
   min-width: 200px;
   padding: 0 9px;
-  color: #98a49a;
+  color: #4d6743;
 }
 .searchBox input {
   width: 100%;
@@ -1097,7 +1097,7 @@
   align-items: center;
   gap: 4px;
   font-size: 9px;
-  color: #48966d;
+  color: #4d6743;
 }
 .challengeTopic {
   font-size: 8px;
@@ -1155,7 +1155,7 @@
 .empty {
   text-align: center;
   padding: 40px 18px;
-  color: #8c9d8f;
+  color: #4d6743;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1226,7 +1226,7 @@
   display: block;
   font-size: 25px;
   font-weight: 600;
-  color: #5e8557;
+  color: #4d6743;
 }
 .overallProgress > span {
   font-size: 10px;
@@ -2080,11 +2080,11 @@
 }
 .tinyLabel {
   font-size: 9px;
-  color: #657b58;
+  color: #4d6743;
 }
 .challengeMeta {
   font-size: 11px;
-  color: #667b5d;
+  color: #4d6743;
 }
 .difficulty {
   font-size: 10px;
@@ -2170,7 +2170,7 @@
 }
 .challengeTopic {
   font-size: 10px;
-  color: #617f56;
+  color: #4d6743;
 }
 .challengeCard > p {
   font-size: 13px;
@@ -2185,7 +2185,7 @@
 }
 .xpTag {
   font-size: 11px;
-  color: #6a825c;
+  color: #4d6743;
 }
 .completedLabel {
   font-size: 11px;
@@ -2193,7 +2193,7 @@
 }
 .progressHero p {
   font-size: 12px;
-  color: #647c56;
+  color: #4d6743;
 }
 .badge > strong {
   font-size: 12px;
@@ -2201,7 +2201,7 @@
 }
 .badge > small {
   font-size: 10px;
-  color: #697d5e;
+  color: #4d6743;
 }
 .backupCard > p {
   font-size: 13px;
@@ -2232,10 +2232,10 @@
 }
 .overallProgress > span {
   font-size: 12px;
-  color: #637d56;
+  color: #4d6743;
 }
 .progressHero h2 small {
-  color: #607a51;
+  color: #4d6743;
 }
 .heroSecondary {
   color: #4e7055;

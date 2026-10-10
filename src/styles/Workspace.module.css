@@ -6,6 +6,58 @@
   color: #82957e;
   margin: 0 0 23px;
 }
+.concept {
+  margin-bottom: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+}
+.concept summary,
+.sheetHelp summary {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  font-size: 12px;
+  color: #486747;
+  min-height: 34px;
+  gap: 12px;
+}
+.concept summary::-webkit-details-marker,
+.sheetHelp summary::-webkit-details-marker {
+  display: none;
+}
+.concept summary:focus-visible,
+.sheetHelp summary:focus-visible {
+  outline: 2px solid #176e51;
+  outline-offset: 3px;
+}
+.concept[open] summary svg,
+.sheetHelp[open] summary svg {
+  transform: rotate(180deg);
+}
+.concept p,
+.sheetHelp p {
+  color: #566d50;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 10px 0 0;
+}
+.sheetHelp {
+  margin: 8px 2px 18px;
+  max-width: 620px;
+}
+.sheetHelp summary {
+  justify-content: flex-start;
+  font-size: 11px;
+}
+.sheetHelp p {
+  font-size: 12px;
+}
+.languageLabel {
+  font-size: 11px;
+  color: #526b49;
+}
 .back:hover {
   color: #137c59;
 }
@@ -50,7 +102,7 @@
   border-bottom: 1px solid var(--line);
   font-size: 12px;
   font-weight: 600;
-  color: #668064;
+  color: #4d6743;
 }
 .instructionsBody {
   padding: 22px 20px;
@@ -62,8 +114,7 @@
   margin: 11px 0 22px;
 }
 .mission {
-  border-top: 1px solid var(--line);
-  padding-top: 20px;
+  padding-top: 0;
 }
 .mission > p {
   font-size: 12px;
@@ -119,7 +170,7 @@
 }
 .hints > button > span {
   margin-left: auto;
-  color: #a6b39a;
+  color: #4d6743;
   font-size: 9px;
 }
 .hintBox {
@@ -175,7 +226,7 @@
 }
 .solutionBox strong {
   font-size: 10px;
-  color: #6e8b5c;
+  color: #4d6743;
 }
 .solutionBox code {
   font-size: 10px;
@@ -239,7 +290,7 @@
   text-align: center;
   background: #fafcf7;
   font-size: 10px;
-  color: #678361;
+  color: #4d6743;
   height: 100%;
   padding: 0 5px;
   min-height: 0;
@@ -248,7 +299,7 @@
   font-family: Georgia, serif;
   font-style: italic;
   font-size: 15px;
-  color: #a4b098;
+  color: #4d6743;
   padding: 0 12px;
 }
 .formulaBar input {
@@ -443,6 +494,7 @@
   color: #90a17e;
 }
 .feedbackHeading > strong {
+  color: #4d6743;
   margin-left: auto;
   white-space: nowrap;
   font-size: 16px;
@@ -658,7 +710,7 @@
     padding: 11px 5px;
     font-size: 11px;
     background: none;
-    color: #9aaa8f;
+    color: #4d6743;
     border-bottom: 2px solid transparent;
     border-radius: 0;
   }
@@ -809,11 +861,11 @@
 }
 .back {
   font-size: 12px;
-  color: #617e55;
+  color: #4d6743;
 }
 .saved {
   font-size: 11px;
-  color: #5f7d52;
+  color: #4d6743;
 }
 .sheetHeader > span {
   font-size: 13px;
@@ -835,7 +887,7 @@
 }
 .rowNumber {
   font-size: 10px;
-  color: #728568;
+  color: #4d6743;
 }
 .headerCell {
   color: #58714c;
@@ -846,11 +898,11 @@
 }
 .checkRow > span {
   font-size: 10px;
-  color: #607d4e;
+  color: #4d6743;
 }
 .sheetFooter {
   font-size: 10px;
-  color: #647f52;
+  color: #4d6743;
 }
 .feedback > p {
   font-size: 13px;
@@ -858,7 +910,7 @@
 }
 .feedbackHeading p {
   font-size: 12px;
-  color: #607c50;
+  color: #4d6743;
 }
 .feedback ul {
   font-size: 13px;
@@ -878,7 +930,7 @@
   font-size: 13px;
 }
 .emptyCellMark {
-  color: #7f9e65;
+  color: #4d6743;
 }
 .feedbackHeading h2 {
   color: #466a36;

@@ -37,6 +37,8 @@ npm run preview
 - Fundamentos, lógica, agregaciones, búsquedas, texto/fechas y funciones financieras.
 - Tres casos: presupuesto frente a ejecución, caja a seis meses y evaluación de inversión.
 - Español e inglés con selectores independientes para interfaz y fórmulas.
+- Portada breve; catálogo, casos y progreso en pantallas propias. El temario y las ayudas se despliegan bajo demanda.
+- Selector de idioma con botones y navegación por flechas, Home y End; menú móvil con cierre por Escape.
 - Dos pistas por reto, soluciones explicadas, estados de resolución asistida, puntos sin duplicados y siete insignias.
 - Borradores, intentos y resultados en IndexedDB; exportación/importación JSON hasta 1 MB.
 - Diseño adaptable y edición por teclado en la hoja (doble clic/F2, Enter, Tab y flechas).
@@ -122,7 +124,9 @@ Materiales para difusión: `docs/LINKEDIN.md`, capturas en `artifacts` e imagen 
 
 ### Verificación de lanzamiento
 
-El 10 de octubre de 2026 pasaron 37 pruebas de cálculo/contenido/respaldos y 24 recorridos de navegador en Chromium, Firefox y WebKit. Los recorridos resuelven las 27 actividades, verifican las siete insignias y comprueban escritorio, móvil, teclado, cambio de idioma, almacenamiento bloqueado, importación y conservación de borradores sin pulsar Enter. `node scripts/verify-deployment.mjs` comprueba la demo publicada, el cálculo, la persistencia, CSP, metadatos sociales y ausencia de solicitudes a terceros. La revisión npm no reportó vulnerabilidades conocidas en esa fecha; conviene repetirla al actualizar dependencias.
+La revisión del 10 de octubre de 2026 incluye 67 pruebas de cálculo, contenido, Worker y respaldos, y 69 recorridos de navegador en Chromium, Firefox y WebKit. Los recorridos resuelven las 27 actividades, verifican las siete insignias y comprueban teclado, idiomas independientes, respaldos anteriores, almacenamiento bloqueado y conservación de borradores sin pulsar Enter. Se revisan anchos de 320, 390, 768, 1024 y 1440 píxeles, junto con auditorías automáticas de accesibilidad en ambos idiomas. Consulta el alcance en [docs/TESTING.md](docs/TESTING.md).
+
+`node scripts/verify-deployment.mjs` comprueba la demo publicada, navegación, cambio de idioma, cálculo, persistencia, CSP, metadatos sociales y ausencia de solicitudes a terceros. La revisión npm no reportó vulnerabilidades conocidas en esa fecha; conviene repetirla al actualizar dependencias.
 
 ## English
 
@@ -135,6 +139,8 @@ Use Node **24.14.1**. Run `npm ci` and `npm run dev`. For a production verificat
 ### Design and calculation
 
 React/TypeScript and React Data Grid provide the interface. IronCalc 0.8.4 runs in a Web Worker and translates formulas natively between Spanish and English. Interface and formula languages are independent. Stable data codes preserve quoted lookup criteria across languages.
+
+The landing page keeps the introduction brief. Challenges, cases and progress have separate screens; the syllabus, concepts and worksheet help expand on request. Language buttons support arrows, Home and End. The mobile menu closes with Escape and restores focus.
 
 `ChallengeDefinition` separates bilingual educational content from the UI. `SpreadsheetEngine` abstracts calculation and grading. `ProgressRepository` abstracts local persistence. Answers are checked against original inputs and multiple deterministic input variants with per-target tolerances. Valid alternative formulas are accepted; constants are rejected. Absolute references are required where they are the learning objective. Integrated cases also require correct financial interpretation.
 
@@ -156,7 +162,7 @@ The output `dist` is a portable static site. Cloudflare Pages can build with `np
 
 New challenges need bilingual copy, hints, reference solutions and input variants. The public core is MIT-licensed. Workshops, mentoring and corporate cases are potential future revenue sources; protected premium content and verified assessments require a separate backend.
 
-Release verification on October 10, 2026: 37 unit tests and 24 browser journeys passed across Chromium, Firefox and WebKit. These include completion of all 27 activities, badges, keyboard/mobile interaction, backups, language persistence and unsubmitted drafts. Run `node scripts/verify-deployment.mjs` to verify production headers, social metadata and browser-local calculation/persistence. npm reported no known vulnerabilities at release; repeat the audit when dependencies change.
+The October 10, 2026 verification includes 67 unit tests and 69 browser journeys across Chromium, Firefox and WebKit. Coverage includes all 27 activities, badges, keyboard interaction, legacy backups, independent language settings, unsubmitted drafts, five viewport widths and automated accessibility scans in both languages. See [docs/TESTING.md](docs/TESTING.md) for scope. Run `node scripts/verify-deployment.mjs` to verify production navigation, headers, social metadata and browser-local calculation/persistence. npm reported no known vulnerabilities at release; repeat the audit when dependencies change.
 
 ## License / Licencia
 

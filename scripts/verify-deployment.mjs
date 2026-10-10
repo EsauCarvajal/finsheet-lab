@@ -24,6 +24,18 @@ for (const [name, type] of Object.entries({ chromium, firefox, webkit })) {
     page.on('request', (r) => {
       if (new URL(r.url()).origin !== origin) external.push(r.url());
     });
+    await page.goto(origin);
+    await page.getByRole('heading', { name: 'Domina Excel. Piensa en finanzas.' }).waitFor();
+    assert.equal(await page.getByRole('navigation').getByRole('link').count(), 3);
+    await page
+      .locator('#ui-language')
+      .getByRole('button', { name: 'English', exact: true })
+      .click();
+    await page.getByRole('heading', { name: 'Master Excel. Think in finance.' }).waitFor();
+    await page
+      .locator('#ui-language')
+      .getByRole('button', { name: 'Español', exact: true })
+      .click();
     await page.goto(`${origin}/#learn/foundation-01`);
     await page.getByRole('textbox', { name: 'Fórmula', exact: true }).fill('=SUMA(B2:B5)');
     await page.getByRole('button', { name: 'Comprobar solución', exact: true }).click();
@@ -32,7 +44,14 @@ for (const [name, type] of Object.entries({ chromium, firefox, webkit })) {
     await page.getByText('Completado', { exact: true }).waitFor();
     assert.deepEqual(errors, []);
     assert.deepEqual(external, []);
-    console.log(`${name}: HTTPS, formula calculation and saved progress passed`);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.getByRole('button', { name: 'Menu', exact: true }).click();
+    await page.getByRole('navigation').waitFor({ state: 'visible' });
+    await page.keyboard.press('Escape');
+    await page.getByRole('navigation').waitFor({ state: 'hidden' });
+    console.log(
+      `${name}: navigation, languages, mobile menu, calculation and saved progress passed`,
+    );
   } finally {
     await browser.close();
   }

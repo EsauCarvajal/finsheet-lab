@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DataGrid, type Column, type RenderEditCellProps } from 'react-data-grid';
 import {
@@ -30,6 +30,7 @@ import {
 } from '../types';
 import s from '../styles/App.module.css';
 import w from '../styles/Workspace.module.css';
+import LanguageSwitch from './LanguageSwitch';
 
 const EMPTY: Cells = {};
 type Row = { id: number; [key: string]: string | number };
@@ -93,6 +94,9 @@ export default function Workspace({
   storageError: boolean;
 }) {
   const { t } = useTranslation();
+  useLayoutEffect(() => {
+    document.querySelector<HTMLElement>('main h1')?.focus({ preventScroll: true });
+  }, [c]);
   const [engine] = useState(() => new WorkerEngine());
   const draft = activity?.draft ?? EMPTY;
   const formulaLang = activity?.formulaLanguage ?? defaultFormulaLanguage;
@@ -356,8 +360,6 @@ export default function Workspace({
             {t('instructions')}
           </div>
           <div className={w.instructionsBody}>
-            <span className={s.tinyLabel}>{t('lesson')}</span>
-            <p>{c.lesson[lang]}</p>
             <div className={w.mission}>
               <span className={s.tinyLabel}>{t('task')}</span>
               <p>{c.task[lang]}</p>
@@ -379,6 +381,13 @@ export default function Workspace({
                 </button>
               ))}
             </div>
+            <details className={w.concept}>
+              <summary>
+                {t('lesson')}
+                <ChevronDown size={14} />
+              </summary>
+              <p>{c.lesson[lang]}</p>
+            </details>
             <div className={w.hints}>
               {Array.from({ length: activity?.hints ?? 0 }, (_, i) => (
                 <div key={i} className={w.hintBox}>
@@ -429,17 +438,15 @@ export default function Workspace({
                 {t('sheet')}
               </span>
               <div>
-                <label htmlFor="formula-language">{t('formulaLanguage')}</label>
-                <select
+                <span className={w.languageLabel}>{t('formulaLanguage')}</span>
+                <LanguageSwitch
                   id="formula-language"
-                  aria-label={t('formulaLanguage')}
+                  label={t('formulaLanguage')}
                   value={formulaLang}
                   disabled={busy}
-                  onChange={(e) => void changeFormulaLanguage(e.target.value as Language)}
-                >
-                  <option value="es">ES</option>
-                  <option value="en">EN</option>
-                </select>
+                  compact
+                  onChange={(language) => void changeFormulaLanguage(language)}
+                />
                 <button
                   className={s.iconButton}
                   onClick={() => {
@@ -500,7 +507,6 @@ export default function Workspace({
                 <Check size={17} />
               </button>
             </form>
-            <div className={w.formulaHelp}>{t('formulaHelp')}</div>
             <DataGrid<Row>
               className={w.dataGrid}
               aria-label={t('sheet')}
@@ -543,7 +549,14 @@ export default function Workspace({
               <span>FinSheet · 01</span>
             </div>
           </section>
-          <p className={w.keyboardHelp}>{t('keyboardHelp')}</p>
+          <details className={w.sheetHelp}>
+            <summary>
+              {t('sheetHelp')}
+              <ChevronDown size={14} />
+            </summary>
+            <p>{t('formulaHelp')}</p>
+            <p>{t('keyboardHelp')}</p>
+          </details>
           {!isEditable && <p className={w.readonlyNote}>{t('readonly')}</p>}
           {c.interpretation && (
             <fieldset className={w.interpretation}>
