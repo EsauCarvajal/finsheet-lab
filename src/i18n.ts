@@ -324,14 +324,12 @@ const en: Record<keyof typeof es, string> = {
   difficulty: 'Difficulty',
 };
 
-void i18n
-  .use(initReactI18next)
-  .init({
-    resources: { es: { translation: es }, en: { translation: en } },
-    lng: 'es',
-    fallbackLng: 'es',
-    interpolation: { escapeValue: false },
-  });
+void i18n.use(initReactI18next).init({
+  resources: { es: { translation: es }, en: { translation: en } },
+  lng: 'es',
+  fallbackLng: 'es',
+  interpolation: { escapeValue: false },
+});
 export default i18n;
 export const functionNames: Record<string, string> = {
   SUM: 'SUMA',

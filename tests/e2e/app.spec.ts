@@ -59,13 +59,11 @@ test('solve, persist, export, delete and restore progress', async ({ page }) => 
   await page.getByLabel('Importar respaldo', { exact: true }).setInputFiles(path!);
   await expect(page.getByText('Respaldo importado correctamente.')).toBeVisible();
   await expect(page.getByText('1 / 27 completados', { exact: true })).toBeVisible();
-  await page
-    .getByLabel('Importar respaldo', { exact: true })
-    .setInputFiles({
-      name: 'bad.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from('{"version":9}'),
-    });
+  await page.getByLabel('Importar respaldo', { exact: true }).setInputFiles({
+    name: 'bad.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('{"version":9}'),
+  });
   await expect(page.getByText(/El archivo no es un respaldo compatible/)).toBeVisible();
   await expect(page.getByText('1 / 27 completados', { exact: true })).toBeVisible();
 });
